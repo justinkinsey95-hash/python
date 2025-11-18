@@ -30,6 +30,7 @@ class MyTestCase(unittest.TestCase):
         self.tv1.power()
         self.tv1.mute()
         self.assertEqual(self.tv1.get_muted(), True)
+        self.assertEqual(str(self.tv1), 'Power = True, Channel = 0, Volume = 0')
 
         #checks if mute status changes from False if volume is turned down from 0
         self.tv1.volume_down()
@@ -44,6 +45,20 @@ class MyTestCase(unittest.TestCase):
         self.tv1.volume_down()
         self.tv1.mute()
         self.assertEqual(self.tv1.get_muted(), True)
+
+        #checks from muted > volume up > muted
+        self.tv1.volume_up()
+        self.tv1.mute()
+        self.assertEqual(self.tv1.get_muted(), True)
+        self.assertEqual(str(self.tv1), 'Power = True, Channel = 0, Volume = 0')
+
+        #unmutes > turns power off > mutes, checks status after being muted
+        self.tv1.mute()
+        self.tv1.power()
+        self.tv1.mute()
+        self.assertEqual(self.tv1.get_muted(), False)
+        self.assertEqual(str(self.tv1), 'Power = False, Channel = 0, Volume = 1')
+
 
 
     def test_channel_up(self):
@@ -98,6 +113,12 @@ class MyTestCase(unittest.TestCase):
         self.tv1.volume_down()
         self.assertEqual(str(self.tv1), 'Power = True, Channel = 0, Volume = 0')
 
+        #checks mute > volume down to clear mute
+        self.tv1.mute()
+        self.tv1.volume_down()
+        self.assertEqual(self.tv1.get_muted(), False)
+        self.assertEqual(str(self.tv1), 'Power = True, Channel = 0, Volume = 0')
+
 
     def test_volume_up(self):
         # checks for power off and volume up to not change anything
@@ -114,6 +135,12 @@ class MyTestCase(unittest.TestCase):
         self.tv1.volume_up()
         self.tv1.volume_up()
         self.tv1.volume_up()
+        self.assertEqual(str(self.tv1), 'Power = True, Channel = 0, Volume = 2')
+
+        #checks that volume up clears mute
+        self.tv1.mute()
+        self.tv1.volume_up()
+        self.assertEqual(self.tv1.get_muted(), False)
         self.assertEqual(str(self.tv1), 'Power = True, Channel = 0, Volume = 2')
 
 
